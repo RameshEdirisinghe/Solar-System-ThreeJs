@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { color } from "three/webgpu";
 import { Pane } from "tweakpane";
 
 // initialize pane
@@ -9,6 +10,52 @@ const pane = new Pane();
 const scene = new THREE.Scene();
 
 // add stuff here
+const sphereGeometry = new THREE.SphereGeometry(1,32,32)
+const sunMaterial = new THREE.MeshBasicMaterial(
+  {
+    color : 'yellow'
+  }
+)
+
+const sun = new THREE.Mesh(
+  sphereGeometry,
+  sunMaterial
+)
+
+
+
+scene.add(sun);
+sun.scale.setScalar(5)
+
+const earthMaterial = new THREE.MeshBasicMaterial(
+  {
+    color:'blue'
+  }
+)
+
+const earth = new THREE.Mesh(
+  sphereGeometry,
+  earthMaterial
+)
+
+earth.position.x=10
+scene.add(earth)
+
+const moonMaterial = new THREE.MeshBasicMaterial(
+  {
+    color:'grey'
+  }
+)
+
+const moon = new THREE.Mesh(
+  sphereGeometry,
+  moonMaterial
+)
+
+moon.scale.setScalar(0.5)
+moon.position.x=2
+earth.add(moon)
+
 
 // initialize the camera
 const camera = new THREE.PerspectiveCamera(
@@ -39,8 +86,23 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+const clock = new THREE.Clock()
+
 // render loop
 const renderloop = () => {
+  const elapsedTime = clock.getElapsedTime()
+
+  //add animation 
+  earth.rotation.y += 0.01;
+  
+  earth.position.x = Math.sin(elapsedTime)*10
+  earth.position.z = Math.cos(elapsedTime)*10
+
+  moon.position.x = Math.sin(elapsedTime)*2
+  moon.position.z = Math.cos(elapsedTime)*2
+
+
+
   controls.update();
   renderer.render(scene, camera);
   window.requestAnimationFrame(renderloop);
