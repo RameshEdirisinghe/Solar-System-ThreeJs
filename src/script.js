@@ -235,7 +235,7 @@ console.log(planetMeshes)
 // add lights
 const ambientLight = new THREE.AmbientLight(
   0xffffff,
-  1
+  0.3
 )
 scene.add(ambientLight)
 
