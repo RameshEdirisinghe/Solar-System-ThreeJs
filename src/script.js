@@ -29,6 +29,62 @@ marsTexture.colorSpace = THREE.SRGBColorSpace
 const moonTexture = textureLoader.load("/textures/2k_moon.jpg");
 moonTexture.colorSpace = THREE.SRGBColorSpace
 
+const boulderAlbedo = textureLoader.load('/textures/badlands-boulders-bl/badlands-boulders_albedo.png')
+boulderAlbedo.colorSpace = THREE.SRGBColorSpace
+const boulderAo = textureLoader.load('/textures/badlands-boulders-bl/badlands-boulders_ao.png')
+const boulderHeight = textureLoader.load('/textures/badlands-boulders-bl/badlands-boulders_height.png')
+const boulderMetallic = textureLoader.load('/textures/badlands-boulders-bl/badlands-boulders_metallic.png')
+const boulderNormal = textureLoader.load('/textures/badlands-boulders-bl/badlands-boulders_normal-ogl.png')
+const boulderRoughness = textureLoader.load('/textures/badlands-boulders-bl/badlands-boulders_roughness.png')
+
+
+const spaceCruiserAlbedo = textureLoader.load('/textures/space-cruiser-panels2-bl/space-cruiser-panels2_albedo.png')
+spaceCruiserAlbedo.colorSpace = THREE.SRGBColorSpace
+const spaceCruiserAo = textureLoader.load('/textures/space-cruiser-panels2-bl/space-cruiser-panels2_ao.png')
+const spaceCruiserHeight = textureLoader.load('/textures/space-cruiser-panels2-bl/space-cruiser-panels2_height.png')
+const spaceCruiserMetallic = textureLoader.load('/textures/space-cruiser-panels2-bl/space-cruiser-panels2_metallic.png')
+const spaceCruiserNormal = textureLoader.load('/textures/space-cruiser-panels2-bl/space-cruiser-panels2_normal-ogl.png')
+const spaceCruiserRoughness = textureLoader.load('/textures/space-cruiser-panels2-bl/space-cruiser-panels2_roughness.png')
+
+const boulderPane = pane.addFolder({
+  title: 'Boulder Material',
+  expanded: true
+})
+
+const boulderMaterial = new THREE.MeshStandardMaterial();
+boulderMaterial.map = boulderAlbedo
+boulderMaterial.roughnessMap = boulderRoughness
+boulderMaterial.metalnessMap = boulderMetallic
+boulderMaterial.normalMap = boulderNormal
+boulderMaterial.displacementMap = boulderHeight
+boulderMaterial.displacementScale = 0.1
+boulderMaterial.aoMap = boulderAo
+
+boulderPane.addBinding(boulderMaterial, 'metalness', { min: 0, max: 1, step: 0.01 })
+boulderPane.addBinding(boulderMaterial, 'roughness', { min: 0, max: 1, step: 0.01 })
+boulderPane.addBinding(boulderMaterial, 'displacementScale', { min: 0, max: 1, step: 0.01 })
+boulderPane.addBinding(boulderMaterial, 'aoMapIntensity', { min: 0, max: 1, step: 0.01 })
+
+
+const spaceCruiserPane = pane.addFolder({
+  title: 'Space Cruiser Material',
+  expanded: true
+})
+
+const spaceCruiserMaterial = new THREE.MeshStandardMaterial();
+spaceCruiserMaterial.map = spaceCruiserAlbedo
+spaceCruiserMaterial.roughnessMap = spaceCruiserRoughness
+spaceCruiserMaterial.metalnessMap = spaceCruiserMetallic
+spaceCruiserMaterial.normalMap = spaceCruiserNormal
+spaceCruiserMaterial.displacementMap = spaceCruiserHeight
+spaceCruiserMaterial.displacementScale = 0.1
+spaceCruiserMaterial.aoMap = spaceCruiserAo
+
+spaceCruiserPane.addBinding(spaceCruiserMaterial, 'metalness', { min: 0, max: 1, step: 0.01 })
+spaceCruiserPane.addBinding(spaceCruiserMaterial, 'roughness', { min: 0, max: 1, step: 0.01 })
+spaceCruiserPane.addBinding(spaceCruiserMaterial, 'displacementScale', { min: 0, max: 1, step: 0.01 })
+spaceCruiserPane.addBinding(spaceCruiserMaterial, 'aoMapIntensity', { min: 0, max: 1, step: 0.01 })
+
 const backgroundCubemap = cubeTextureLoader
 .load( [
   'px.png',
@@ -57,9 +113,6 @@ const marsMaterial = new THREE.MeshStandardMaterial({
 const moonMaterial = new THREE.MeshStandardMaterial({
   map: moonTexture,
 });
-// const sunTexture1Mat = new THREE.MeshStandardMaterial({
-//   map: sunTexture1,
-// });
 
 // add stuff here
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
@@ -67,14 +120,6 @@ const sunMaterial = new THREE.MeshBasicMaterial({
   map: sunTexture,
 });
 
-// const sphereGeometries = new THREE.CapsuleGeometry(1,1,32,32);
-//  const sun2 = new THREE.Mesh(sphereGeometries,sunTexture1Mat) ;
-//  sun2.scale.setScalar(5);
-//  sun2.length=29.29;
-//  sun2.capSegments=32;
-//  sun2.radialSegments=64;
-//  sun2.position.y=10;
-//  scene.add(sun2)
 
 const sun = new THREE.Mesh(sphereGeometry, sunMaterial);
 sun.scale.setScalar(5);
@@ -134,7 +179,24 @@ const planets = [
       },
     ],
   },
+  {
+    name: "Boulder",
+    radius: 0.8,
+    distance: 30,
+    speed: 0.002,
+    material: boulderMaterial,
+    moons: [],
+  },
+  {
+    name: "Cruiser",
+    radius: 0.8,
+    distance: 35,
+    speed: 0.001,
+    material: spaceCruiserMaterial,
+    moons: [],
+  },
 ];
+
 
 const createPlanet = (planet) =>{
   const planetMesh = new THREE.Mesh(
@@ -173,7 +235,7 @@ console.log(planetMeshes)
 // add lights
 const ambientLight = new THREE.AmbientLight(
   0xffffff,
-  0.3
+  1
 )
 scene.add(ambientLight)
 
